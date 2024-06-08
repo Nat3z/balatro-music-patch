@@ -2,7 +2,7 @@
 A simple program for patching custom music into Balatro. (Specifically Dom Palombi's covers.)
 
 This program uses 7zip to replace in-game files with the custom music. If 7zip is not installed, the program will download it for you, but it is
-recommended to install it yourself. (here)[https://www.7-zip.org/]
+recommended to install it yourself. [here](https://www.7-zip.org/)
 
 [Latest Windows Release](https://github.com/Nat3z/balatro-music-patch/releases/tag/1.0)
 
