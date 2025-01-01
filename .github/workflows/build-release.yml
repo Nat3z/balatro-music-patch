@@ -61,10 +61,13 @@ jobs:
         run: |
           pyinstaller --onefile main.py
 
-      - if: matrix.os == 'windows-latest'
+      - name: Zip Up Application (Windows)
+        if: matrix.os == 'windows-latest'
         run: |
-          mv dist/main.exe dist/balatro-music-patch.exe
-      - if: matrix.os == 'macos-latest'
+          Compress-Archive -Path resources, dist/balatro-music-patch.exe -DestinationPath application/dist/OpenGameInstaller-Portable.zip
+
+      - name: Zip Up Application (MacOS)
+        if: matrix.os == 'macos-latest'
         run: |
           mv dist/main dist/balatro-music-patch
       - name: Zip Up Resources and Application
