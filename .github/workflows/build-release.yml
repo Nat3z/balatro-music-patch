@@ -59,7 +59,7 @@ jobs:
 
       - name: Build Application
         run: |
-          pyinstaller --onefile application/main.py
+          pyinstaller --onefile main.py
 
       - if: matrix.os == 'windows-latest'
         run: |
