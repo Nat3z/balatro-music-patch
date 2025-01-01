@@ -3,7 +3,7 @@ import os
 import urllib.request
 import shutil
 import platform
-
+from sys import exit
 
 def look_for_balatro_windows() -> str:
     path = "C:/Program Files (x86)/Steam/steamapps/common/Balatro/Balatro.exe"
@@ -69,7 +69,9 @@ def check_7zip():
         try:
             subprocess.run(
                 [
-                    f"powershell -Command 'Start-Process ''{sevenzip_installer}'' -ArgumentList ''/D=\"\"{sevenzip_path.removesuffix("7z.exe")}\"\"'''"
+		    "powershell",
+                    "-Command",
+                    f"Start-Process '{sevenzip_installer}' -ArgumentList '/S /D=\"{sevenzip_path.removesuffix("7z.exe")}\"'"
                 ],
                 check=True
             )
@@ -80,6 +82,7 @@ def check_7zip():
 
 
         except Exception as e:
+            print(e)
             print("Failed to install 7zip! Install 7zip manually from the 7zip.exe file in this folder.")
             print("Press any key to exit...")
             input()
