@@ -4,6 +4,7 @@ import urllib.request
 import shutil
 import platform
 
+
 def look_for_balatro_windows() -> str:
     path = "C:/Program Files (x86)/Steam/steamapps/common/Balatro/Balatro.exe"
     does_balatro_exist = os.path.isfile(path)
@@ -60,11 +61,26 @@ def check_7zip():
         print("7zip not found! Installing 7zip...")
         # Download 7zip installer
         urllib.request.urlretrieve(sevenzip_download, "7zip.exe")
+        sevenzip_installer = os.path.realpath("7zip.exe")
+
         print("We will now open the 7zip installer. You will be asked for admin permissions.")
         input("Press Enter to continue...")
-        
         print("Installing 7zip...")
-        subprocess.call(["7zip.exe", "/S", "/D=C:\\Program Files\\7-Zip\\"])
+        try:
+            subprocess.run(
+                [
+                    "powershell", 
+                    "-Command", 
+                    f"Start-Process {sevenzip_installer} -ArgumentList '/S', '/D={sevenzip_path.removesuffix("7z.exe")}' -Verb runAs"
+                ],
+                check=True
+            )
+        except Exception as e:
+            print("Failed to install 7zip! Install 7zip manually from the 7zip.exe file in this folder.")
+            print("Press any key to exit...")
+            input()
+            exit(1)
+
         print("7zip installed!")
         # Clean up the installer
         if os.path.exists("7zip.exe"):
@@ -107,7 +123,8 @@ def main():
                 print("Unsupported OS")
                 print("Press any key to exit...")
                 input()
-                return
+                exit(1)
+
             process.wait()
 
         # delete original folder
@@ -136,7 +153,7 @@ def main():
             print("Unsupported OS")
             print("Press any key to exit...")
             input()
-            return
+            exit(1)
 
         process.wait()
     # replace files in balatro.exe's resources/sounds/ with 7zip
@@ -150,13 +167,15 @@ def main():
             print("Unsupported OS")
             print("Press any key to exit...")
             input()
-            return
+            exit(1)
+
         process.wait()
 
     print(chr(27) + "[2J")
     print("Patch applied! Enjoy your new music!")
     print("Press any key to exit...")
     input()
+    exit(0)
 
 if __name__ == "__main__":
     main()
