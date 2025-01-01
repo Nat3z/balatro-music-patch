@@ -75,6 +75,12 @@ def check_7zip():
                 ],
                 check=True
             )
+
+            # hold until the installer is done
+            while not os.path.exists(sevenzip_path):
+                pass
+
+
         except Exception as e:
             print("Failed to install 7zip! Install 7zip manually from the 7zip.exe file in this folder.")
             print("Press any key to exit...")
@@ -84,8 +90,13 @@ def check_7zip():
         print("7zip installed!")
         # Clean up the installer
         if os.path.exists("7zip.exe"):
-            os.remove("7zip.exe")
-            print("Installer removed.")
+            try:
+                os.remove("7zip.exe")
+                print("Installer removed.")
+            except Exception as e:
+                print("Failed to remove 7zip installer. Please remove it manually.")
+
+
 
 def main():
     os_platform = platform.system()
