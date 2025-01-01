@@ -33,7 +33,6 @@ def look_for_balatro_macos() -> str:
         print("Balatro found! " + path)
     else:
         print("Balatro not found in default path!")
-    
     while not does_balatro_exist:
         path = input("Enter the file path of Balatro (including /Balatro.app at the end): ")
         path = path.removeprefix("\"").removesuffix("\"")
@@ -50,34 +49,43 @@ def look_for_balatro_macos() -> str:
         return ""
     return os.path.realpath(path)
 
+
 def check_7zip():
     sevenzip_download = "https://www.7-zip.org/a/7z1900-x64.exe"
-    try:
-        os.system("\"C:/Program Files/7-Zip/7z.exe\"")
+    sevenzip_path = r"C:\Program Files\7-Zip\7z.exe"
+    
+    if os.path.exists(sevenzip_path):
         print("7zip found!")
-    except FileNotFoundError:
+    else:
         print("7zip not found! Installing 7zip...")
-        # download 7zip
+        # Download 7zip installer
         urllib.request.urlretrieve(sevenzip_download, "7zip.exe")
         print("We will now open the 7zip installer. You will be asked for admin permissions.")
         input("Press Enter to continue...")
+        
         print("Installing 7zip...")
-        subprocess.call("7zip.exe /S /D=C:/Program Files/7-Zip/")
+        subprocess.call(["7zip.exe", "/S", "/D=C:\\Program Files\\7-Zip\\"])
         print("7zip installed!")
+        # Clean up the installer
+        if os.path.exists("7zip.exe"):
+            os.remove("7zip.exe")
+            print("Installer removed.")
 
 def main():
     os_platform = platform.system()
-
+    path = ""
     if os_platform == "Windows":    
+        check_7zip()
         path = look_for_balatro_windows()
         check_7zip()
     elif os_platform == "Darwin":
         path = look_for_balatro_macos()
-        if (path == ""):
-            print("exiting...")
-            return
-    # check if 7zip is installed
 
+    if path == "":
+        print("Failed to find path to Balatro!")
+        print("Press any key to exit...")
+        input()
+        return
 
     # open music folder read files
     music_folder = os.path.join(os.getcwd(), "resources", "sounds")
@@ -95,6 +103,11 @@ def main():
                 process = subprocess.Popen([sevenzip_path, "a", path, f"resources/sounds/{file}"])
             elif os_platform == "Darwin":
                 process = subprocess.Popen(["zip", path, f"resources/sounds/{file}"])
+            else:
+                print("Unsupported OS")
+                print("Press any key to exit...")
+                input()
+                return
             process.wait()
 
         # delete original folder
@@ -103,6 +116,8 @@ def main():
 
         print(chr(27) + "[2J")
         print("Patch reversed! Enjoy the original music!")
+        print("Press any key to exit...")
+        input()
         return
 
 
@@ -117,6 +132,12 @@ def main():
             process = subprocess.Popen([sevenzip_path, "e", path, f"resources/sounds/{file}", "-o" + "original/resources/sounds/"])
         elif os_platform == "Darwin":
             process = subprocess.Popen(["unzip", path, f"resources/sounds/{file}", "-d" + "original/"])
+        else:
+            print("Unsupported OS")
+            print("Press any key to exit...")
+            input()
+            return
+
         process.wait()
     # replace files in balatro.exe's resources/sounds/ with 7zip
     for file in music_files:
@@ -125,10 +146,17 @@ def main():
             process = subprocess.Popen([sevenzip_path, "a", path, f"resources/sounds/{file}"])
         elif os_platform == "Darwin":
             process = subprocess.Popen(["zip", path, f"resources/sounds/{file}"])
+        else:
+            print("Unsupported OS")
+            print("Press any key to exit...")
+            input()
+            return
         process.wait()
 
     print(chr(27) + "[2J")
     print("Patch applied! Enjoy your new music!")
+    print("Press any key to exit...")
+    input()
 
 if __name__ == "__main__":
     main()
