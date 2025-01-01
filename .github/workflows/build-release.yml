@@ -65,7 +65,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           Rename-Item -Path dist/main.exe -NewName balatro-music-patch.exe
-          Compress-Archive -Path resources, dist/balatro-music-patch.exe -DestinationPath balatro-music-patch.zip
+          Compress-Archive -Path resources, dist/balatro-music-patch.exe -DestinationPath dist/balatro-music-patch.zip
 
       - name: Zip Application (MacOS)
         if: matrix.os == 'macos-latest'
