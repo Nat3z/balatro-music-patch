@@ -15,7 +15,7 @@ recommended to install it yourself. [here](https://www.7-zip.org/)
 2. Extract the zip file.
 3. (If necessary) Allow the app through Windows Security
    (Audit code through GitHub to verify.)
-4. Run the executable. (Windows might give you a warning from SmartScreen,
+4. Run `balatro-music-patch.exe` (Windows might give you a warning from SmartScreen,
    but press `More Info -> Run Anyway`.)
 5. Follow the instructions in the program.
 
@@ -39,7 +39,7 @@ recommended to install it yourself. [here](https://www.7-zip.org/)
 2. Extract the zip file.
 3. Open terminal
 4. Navigate to the release directory
-5. Run `./main`
+5. Run `./balatro-music-patch`
 6. Follow the instructions in the program.
 
 ### Manually Patching Music (MacOS)

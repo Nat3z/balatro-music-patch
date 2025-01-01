@@ -69,9 +69,7 @@ def check_7zip():
         try:
             subprocess.run(
                 [
-                    "powershell", 
-                    "-Command", 
-                    f"Start-Process {sevenzip_installer} -ArgumentList '/S', '/D={sevenzip_path.removesuffix("7z.exe")}' -Verb runAs"
+                    f"powershell -Command 'Start-Process ''{sevenzip_installer}'' -ArgumentList ''/D=\"\"{sevenzip_path.removesuffix("7z.exe")}\"\"'''"
                 ],
                 check=True
             )
@@ -94,9 +92,7 @@ def check_7zip():
                 os.remove("7zip.exe")
                 print("Installer removed.")
             except Exception as e:
-                print("Failed to remove 7zip installer. Please remove it manually.")
-
-
+               print("Failed to remove 7zip installer. Please remove it manually.")
 
 def main():
     os_platform = platform.system()
