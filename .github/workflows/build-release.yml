@@ -70,8 +70,8 @@ jobs:
       - name: Zip Application (MacOS)
         if: matrix.os == 'macos-latest'
         run: |
-          mv dist/main dist/balatro-music-patch
-          zip -r dist/balatro-music-patch.zip dist/balatro-music-patch resources
+          mv dist/main balatro-music-patch
+          zip -r dist/balatro-music-patch.zip balatro-music-patch resources
 
       - name: Upload Release
         uses: actions/upload-release-asset@v1

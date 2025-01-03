@@ -2,6 +2,7 @@ import subprocess
 import os
 import urllib.request
 import shutil
+import sys
 import platform
 from sys import exit
 
@@ -10,8 +11,7 @@ def look_for_balatro_windows() -> str:
     does_balatro_exist = os.path.isfile(path)
     if does_balatro_exist:
         print("Balatro found! " + path)
-    else:
-        print("Balatro not found in default path!")
+    else: print("Balatro not found in default path!")
     
     while not does_balatro_exist:
         path = input("Enter the file path of Balatro (including /Balatro.exe at the end): ")
@@ -100,7 +100,16 @@ def check_7zip():
 def main():
     os_platform = platform.system()
     path = ""
-    if os_platform == "Windows":    
+    print(chr(27) + "[2J")
+
+    print("Balatro Music Patcher")
+    if platform.system() == "Darwin":
+        # make this fix for macos as there are weird issues with the working directory
+        path = os.path.sep.join(sys.argv[0].split(os.path.sep)[:-1])
+        os.chdir(path)
+
+
+    if os_platform == "Windows":
         check_7zip()
         path = look_for_balatro_windows()
         check_7zip()
