@@ -1,0 +1,86 @@
+name: Build/release
+
+on: 
+  push:
+    branches:
+      - main
+
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    name: Create Github Release
+    if: github.repository == 'Nat3z/balatro-music-patch'
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: temp-tag
+        release_name: ${{ github.event.head_commit.message }}
+        draft: true
+        prerelease: false
+
+    - name: Output Release URL File
+      run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+    - name: Save Release URL File for publish
+      uses: actions/upload-artifact@v4
+      with:
+        name: release_url
+        path: release_url.txt 
+
+  build:
+    permissions:
+      contents: write
+    runs-on: ${{ matrix.os }}
+    needs: [release]
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Setup Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install pyinstaller
+        run: pip install pyinstaller
+
+      - name: Build Application
+        run: |
+          pyinstaller --onefile main.py
+
+      - name: Zip Application (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          Rename-Item -Path dist/main.exe -NewName balatro-music-patch.exe
+          Compress-Archive -Path resources, dist/balatro-music-patch.exe -DestinationPath dist/balatro-music-patch.zip
+
+      - name: Zip Application (MacOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mv dist/main balatro-music-patch
+          zip -r dist/balatro-music-patch.zip balatro-music-patch resources
+
+      - name: Upload Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.release.outputs.upload_url }}
+          asset_path: dist/balatro-music-patch.zip
+          asset_name: balatro-music-patch-${{ matrix.os }}.zip
+          asset_content_type: application/octet-stream
+
+
+
