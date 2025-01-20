@@ -7,7 +7,7 @@ On Windows this program uses 7zip to replace in-game files with the custom music
 If 7zip is not installed, the program will download it for you, but it is
 recommended to install it yourself. [here](https://www.7-zip.org/)
 
-[Latest Windows Release](https://github.com/Nat3z/balatro-music-patch/releases/tag/1.0)
+[Latest Release](https://github.com/Nat3z/balatro-music-patch/releases/latest)
 
 ## Windows
 
